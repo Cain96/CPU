@@ -3,4 +3,5 @@ wlf*
 work/
 !.gitignore
 !*.vhd
+!*.txt
 
