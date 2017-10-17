@@ -1,0 +1,6 @@
+*.*
+wlf*
+work/
+!.gitignore
+!*.vhd
+
