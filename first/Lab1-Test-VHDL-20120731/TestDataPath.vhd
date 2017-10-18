@@ -6,7 +6,7 @@
 -------------------------------------------
 -- [Caution!!]
 -- * Replace the following signal names with your signal names 
--- 1) loadRegC - "load" + the name of register which you added
+-- 1) loadID - "load" + the name of register which you added
 -- 2) selMuxDOut - "sel" + the name of MUX4x08's which you added
 -- 3) CarryF, loadFC - the output and the load signal of the carry flag which you added
 
@@ -40,7 +40,7 @@ architecture behavior of TestDataPath is
 	signal    CarryF    : std_logic;
 	signal    DataOut   : std_logic_vector (7 downto 0);
 
-	signal    loadRegC  : std_logic;
+	signal    loadID  : std_logic;
 	signal    loadRegB  : std_logic;
 	signal    loadRegA  : std_logic;
 
@@ -79,7 +79,7 @@ architecture behavior of TestDataPath is
 	    CarryF    : out std_logic;
 	    DataOut   : out std_logic_vector (7 downto 0);
 
-	    loadRegC  : in  std_logic;
+	    loadID  : in  std_logic;
 	    loadRegB  : in  std_logic;
 	    loadRegA  : in  std_logic;
 
@@ -122,7 +122,7 @@ begin
 		    CarryF     =>    CarryF     ,
 		    DataOut    =>    DataOut    ,
 
-		    loadRegC   =>    loadRegC   ,
+		    loadID     =>    loadID     ,
 		    loadRegB   =>    loadRegB   ,
 		    loadRegA   =>    loadRegA   ,
 
@@ -151,7 +151,7 @@ process begin
 	selMuxDIn <= '0'; selMuxAddr <= '0'; selMuxDOut <= "00";
 	loadhMB <= '0'; loadlMB <= '0'; loadhIX <= '0'; loadlIX<= '0';   
 	loadIR <= '0'; loadIP <= '0'; loadFZ <= '0'; loadFC <= '0';    
-	loadRegA <= '0'; loadRegB <= '0'; loadRegC <= '0';  
+	loadRegA <= '0'; loadRegB <= '0'; loadID <= '0';  
 	clearIP <= '0'; incIP <= '0'; inc2IP <= '0';   
 	modeALU <= "0000";  
 wait for clk_cycle*2;  -- Default Value
@@ -159,32 +159,32 @@ wait for clk_cycle*2;  -- Default Value
 wait for clk_cycle; -- RegA <= 0x11
 	DataIn <= X"11";  
 	selMuxDIn <= '1'; selMuxAddr <= '0'; selMuxDOut <= "00";
-	loadRegA <= '1'; loadRegB <= '0'; loadRegC <= '0';  
+	loadRegA <= '1'; loadRegB <= '0'; loadID <= '0';  
 	modeALU <= "0000";  
 wait for clk_cycle; -- RegB <= 0x22
 	DataIn <= X"22";  
 	selMuxDIn <= '1'; selMuxAddr <= '0'; selMuxDOut <= "00";
-	loadRegA <= '0'; loadRegB <= '1'; loadRegC <= '0';  
+	loadRegA <= '0'; loadRegB <= '1'; loadID <= '0';  
 	modeALU <= "0000";  
-wait for clk_cycle; -- RegC <= 0x33
+wait for clk_cycle; -- RegID <= 0x33
 	DataIn <= X"33";  
 	selMuxDIn <= '1'; selMuxAddr <= '0'; selMuxDOut <= "01";
-	loadRegA <= '0'; loadRegB <= '0'; loadRegC <= '1';  
+	loadRegA <= '0'; loadRegB <= '0'; loadID <= '1';  
 	modeALU <= "0000";  
 wait for clk_cycle; -- RegA(33) <= RegA(11) or RegB(22)
 	DataIn <= X"44";  
 	selMuxDIn <= '0'; selMuxAddr <= '0'; selMuxDOut <= "10";
-	loadRegA <= '1'; loadRegB <= '0'; loadRegC <= '0';  
+	loadRegA <= '1'; loadRegB <= '0'; loadID <= '0';  
 	modeALU <= "0011";  
 wait for clk_cycle; -- RegB(11) <= RegA(11) and RegB(22)
 	DataIn <= X"55";  
 	selMuxDIn <= '0'; selMuxAddr <= '0'; selMuxDOut <= "00";
-	loadRegA <= '0'; loadRegB <= '1'; loadRegC <= '0';  
+	loadRegA <= '0'; loadRegB <= '1'; loadID <= '0';  
 	modeALU <= "0010";  
 wait for clk_cycle; -- wait for DataOut
 	DataIn <= X"66";  
 	selMuxDIn <= '0'; selMuxAddr <= '0'; selMuxDOut <= "01";
-	loadRegA <= '0'; loadRegB <= '0'; loadRegC <= '0';  
+	loadRegA <= '0'; loadRegB <= '0'; loadID <= '0';  
 	modeALU <= "0000";  
 wait;
 end process;

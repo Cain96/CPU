@@ -33,9 +33,13 @@ entity DataPath is
 
     loadRegB  : in  std_logic;
     loadRegA  : in  std_logic;
+    loadID    : in  std_logic;
 
-    modeALU   : in  std_logic_vector (1 downto 0);
+    modeALU   : in  std_logic_vector (3 downto 0);
     loadFZ    : in  std_logic;
+    loadFC    : in  std_logic;
+
+    selMuxDOut: in  std_logic_vector (1 downto 0);
 
     clock     : in  std_logic;
     reset     : in  std_logic
@@ -75,12 +79,12 @@ component Register16in2
   );
 end component;
  
-component ALU08
+component ALU08C
   port (
     a       : in  std_logic_vector(7 downto 0);
     b       : in  std_logic_vector(7 downto 0);
     cin     : in  std_logic;
-    mode    : in  std_logic_vector(1 downto 0);
+    mode    : in  std_logic_vector(3 downto 0);
     fout    : out std_logic_vector(7 downto 0);
     cout    : out std_logic;
     zout    : out std_logic
@@ -109,6 +113,17 @@ component mux2x08
   );
 end component;
 
+component mux4x08
+   port (
+    a   : in  std_logic_vector(7 downto 0);
+    b   : in  std_logic_vector(7 downto 0);
+    c   : in  std_logic_vector(7 downto 0);
+    d   : in  std_logic_vector(7 downto 0);
+    sel : in  std_logic_vector(1 downto 0);
+    q   : out std_logic_vector(7 downto 0)
+  );
+end component;
+
 component mux2x16
   port (
     a   : in  std_logic_vector(15 downto 0); 
@@ -120,19 +135,23 @@ end component;
 
 signal qRegA      : std_logic_vector(7 downto 0);
 signal qRegB      : std_logic_vector(7 downto 0);
+signal qRegID      : std_logic_vector(7 downto 0);
 signal qMB        : std_logic_vector(15 downto 0);
 signal qIX        : std_logic_vector(15 downto 0);
 signal qIP        : std_logic_vector(15 downto 0);
 signal foutALU    : std_logic_vector(7 downto 0);
 signal zoutALU    : std_logic;
+signal coutALU    : std_logic;
 signal DataInTmp  : std_logic_vector(7 downto 0);
 --------------------------------
 
 signal zero     : std_logic;
+signal carry    : std_logic;
 
 
 begin
 zero <= '0';
+carry<= '0';
 
 --------------------------------
 -- Selector to Data Bus In    --
@@ -219,7 +238,7 @@ IX : Register16in2
 --  ALU                       --
 --                            --
 --------------------------------
-ALU : ALU08
+ALU : ALU08C
   port map(
     a       => qRegA,
     b       => qRegB,
@@ -264,7 +283,21 @@ IR : Register08
     q     => IRout
   );
 
-  
+--------------------------------
+-- RegID                      --
+--                            --
+--       (c) Keishi SAKANUSHI --
+--                 2004/08/23 --
+--------------------------------
+RegID : Register08
+  port map(
+    d     => DataIn,
+    load  => loadID,
+    clock => clock,
+    reset => reset,
+    q     => qRegID
+  );
+
 --------------------------------
 -- Zero Flag                  --
 --                            --
@@ -278,6 +311,21 @@ FZ : Register01
     clock => clock,
     reset => reset,
     q     => ZeroF
+  );
+
+--------------------------------
+-- Carry Flag                 --
+--                            --
+--       (c) Keishi SAKANUSHI --
+--                 2004/08/23 --
+--------------------------------
+FC : Register01
+  port map(
+    d     => coutALU,
+    load  => loadFC,
+    clock => clock,
+    reset => reset,
+    q     => CarryF
   );
 
 
@@ -294,7 +342,22 @@ MuxAddr : Mux2x16
     sel => selMuxAddr,
     q   => Address
   );
-  
-DataOut <= qRegA;
+
+
+--------------------------------
+-- Selector to Data Bus Out   --
+--                            --
+--       (c) Keishi SAKANUSHI --
+--                 2004/08/23 --
+--------------------------------
+MuxDOut : mux4x08
+  port map (
+    a   => qRegA,
+    b   => qRegB,
+    c   => qRegID,
+    d   => qRegID,
+    sel => selMuxDOut,
+    q   => DataOut
+  );
 
 end logic;

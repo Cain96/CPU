@@ -7,7 +7,7 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 
  
-entity TinyProcessor is
+entity CProcessor is
   port (
     clock   : in std_logic;
     reset   : in  std_logic;
@@ -17,9 +17,9 @@ entity TinyProcessor is
     read    : out std_logic;
     write   : out std_logic
   );
-end TinyProcessor;
+end CProcessor;
 
-architecture logic of TinyProcessor is
+architecture logic of CProcessor is
   component DataPath
     port (
     DataIn    : in  std_logic_vector (7 downto 0);
