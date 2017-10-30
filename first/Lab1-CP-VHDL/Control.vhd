@@ -1,3 +1,4 @@
+
 --------------------------------
 --  Subset of C Processor     --
 --                            --
@@ -29,9 +30,13 @@ entity Controler is
 
     loadRegB  : out std_logic;
     loadRegA  : out std_logic;
+    loadID    : out std_logic;
 
-    modeALU   : out std_logic_vector (1 downto 0);
+    modeALU   : out std_logic_vector (3 downto 0);
     loadFZ    : out std_logic;
+    loadFC    : out std_logic;
+    
+    selMuxDOut: out std_logic_vector (1 downto 0);
 
     read      : out std_logic;
     write     : out std_logic;
@@ -97,10 +102,14 @@ end component;
 signal qJCextA : std_logic;
 signal qJCextB : std_logic;
 signal qJCextC : std_logic_vector(1 downto 0);
+signal qJCextD : std_logic_vector(1 downto 0);
+signal qJCextE : std_logic_vector(2 downto 0);
 
 signal cJCextA : std_logic;
 signal cJCextB : std_logic;
 signal cJCextC : std_logic;
+signal cJCextD : std_logic;
+signal cJCextE : std_logic;
 signal cs1     : std_logic;
 signal cs2     : std_logic;
 
@@ -172,6 +181,28 @@ JCextC : Johnson2L0
     reset => reset,
     q     => qJCextC
   );
+  
+----------------
+--   JCextD   --
+----------------
+JCextD : Johnson2L0
+  port map(
+    cond0  => cJCextD,
+    clock => clock,
+    reset => reset,
+    q     => qJCextD
+  );
+
+----------------
+--   JCextE   --
+----------------
+JCextE : Johnson3L0
+  port map(
+    cond0  => cJCextE,
+    clock => clock,
+    reset => reset,
+    q     => qJCextE
+  );
 
 
 --------------------------------
@@ -183,13 +214,31 @@ selMuxAddr <= '1' when qJCextB = '1'  else
               '1' when qJCextC = "01" else
 	          '1' when qJCextC = "11" else
 	          '1' when qJCextC = "10" else
+              '1' when qJCextD = "01" else
+	          '1' when qJCextD = "11" else
+	          '1' when qJCextD = "10" else
+              '1' when qJCextE = "111" else
+	          '1' when qJCextE = "110" else
+	          '1' when qJCextE = "100" else
 	          '0' ;
+              
+selMuxDOut <= "01" when qJCextD = "01" else
+	          "01" when qJCextD = "11" else
+	          "01" when qJCextD = "10" else
+              "10" when qJCextE = "111" else
+	          "10" when qJCextE = "110" else
+              "10" when qJCextE = "100" else
+	          "00" ;
 
 read  <= '0' when qJCextA = '1' else
          '0' when qJCextB = '1' else
+         '0' when qJCextE = "001" else
+         '0' when qJCextE = "011" else
          '1';
 
 write <= '0' when qJCextC = "11" else
+         '0' when qJCextD = "11" else
+         '0' when qJCextE = "110" else
          '1';
 
 
@@ -268,6 +317,7 @@ JCintF : Johnson3L0
     reset => reset,
     q     => qJCintF
   );
+  
 
 
 
@@ -279,26 +329,35 @@ JCintF : Johnson3L0
 --------------------------------
 
 cJCextA <= '1' when qJCintA = '0' else
-           '1' when (qJCintB = "10" and irout(7 downto 4) = "0010") else -- SETIXH SETIXL LDIA LDIB
-           '1' when (qJCintB = "10" and irout(7 downto 4) = "1000") else -- JP
-           '1' when (qJCintB = "10" and irout(7 downto 4) = "1001" and ZeroF = '1') else -- JPZ(Z=1)
-           '1' when (qJCintC = "11" and irout(7 downto 4) = "0001") else -- LDDA LDDB
-           '1' when (qJCintD = '1')  else
-		   '1' when (qJCintE = "10") else
-           '1' when (qJCintF = "100") else
+           '1' when (qJCintB = "10" and irout(7 downto 4) = "1101") else -- SETIXH SETIXL LDIA LDIB
+           '1' when (qJCintB = "10" and irout(7 downto 4) = "0110") else -- JP
+           '1' when (qJCintB = "10" and irout(7 downto 4) = "0101" and ZeroF = '1') else -- JPZ(Z=1)
+           '1' when (qJCintB = "10" and irout(7 downto 4) = "0100" and CarryF= '1') else -- JPC(C=1)
+           '1' when (qJCintC = "11" and irout(7 downto 4) = "1110") else -- LDDA LDDB
+           '1' when (qJCintD = '1')  else -- ALU
+		   '1' when (qJCintE = "10") else -- STD
+           '1' when (qJCintF = "100") else -- JP, STDI
            '0';
 
-cJCextB <= '1' when (qJCintB = "10" and irout(7 downto 4) = "0001") else -- LDDA LDDB
+cJCextB <= '1' when (qJCintB = "10" and irout(7 downto 4) = "1110") else -- LDDA LDDB
            '0';
 
-cJCextC <= '1' when (qJCintB = "10" and irout(7 downto 4) = "0100") else -- STDA 
+cJCextC <= '1' when (qJCintB = "10" and irout = "11110000") else -- STDA 
+           '0';
+           
+cJCextD <= '1' when (qJCintB = "10" and irout = "11110100") else -- STDB 
+           '0';
+           
+cJCextE <= '1' when (qJCintB = "10" and irout = "11111000") else -- STDI 
            '0';
 
 cs1     <= '1' when qJCintB = "11"  else
-           '1' when qJCintF = "110" else
+           '1' when (qJCintF = "110" and irout(7 downto 4) = "0110") else -- JP
+           '1' when (qJCintF = "110" and irout(7 downto 4) = "0101" and ZeroF = '1') else -- JPZ(Z=1)
+           '1' when (qJCintF = "110" and irout(7 downto 4) = "0100" and CarryF= '1') else -- JPC(C=1)
 		   '0';
 
-cs2     <= '1' when (qJCintC = "11" and irout(7 downto 4) = "0001") else -- LDDA LDDB
+cs2     <= '1' when (qJCintC = "11" and irout(7 downto 4) = "1110") else -- LDDA LDDB
            '0';
 
 
@@ -312,25 +371,29 @@ cact    <= '0';
 
 cJCintB <= '1' when qJCintA = '0'   else
            '1' when qJCintC = "11"  else
-	   '1' when qJCintD = '1'   else
-	   '1' when qJCintE = "10"  else
-	   '1' when qJCintF = "100" else
-	   '0';
-
-cJCintC <= '1' when (qJCintB = "10" and irout(7 downto 6) = "00") else -- SETIXH SETIXL LDIA LDIB LDDA LDDB
+           '1' when qJCintD = '1'   else
+           '1' when qJCintE = "10"  else
+           '1' when qJCintF = "100" else
            '0';
 
-cJCintD <= '1' when (qJCintB = "10" and irout(7 downto 5) = "110") else -- ADDA ADDB INCA DECA
-           '1' when (qJCintB = "10" and irout(7 downto 4) = "1001" and ZeroF = '0') else -- JPZ(Z=0)
+cJCintC <= '1' when (qJCintB = "10" and irout(7 downto 5) = "110") else -- SETIXH SETIXL LDIA LDIB
+           '1' when (qJCintB = "10" and irout(7 downto 4) = "1110") else -- LDDA LDDB
            '0';
 
-cJCintE <= '1' when (qJCintB = "10" and irout(7 downto 6) = "01") else -- STDA
+cJCintD <= '1' when (qJCintB = "10" and irout(7 downto 5) = "100") else -- ADD SUB AND OR NOT INC DEC
+           '1' when (qJCintB = "10" and irout(7 downto 5) = "101") else -- CMP
+           '1' when (qJCintB = "10" and irout(7 downto 4) = "0100" and ZeroF = '0') else -- JPZ(Z=0)
+           '1' when (qJCintB = "10" and irout(7 downto 4) = "0101" and CarryF = '0') else -- JPC(C=0)
            '0';
-      
-cJCintF <= '1' when (qJCintB = "10" and irout(7 downto 4) = "1000") else -- JP
-           '1' when (qJCintB = "10" and irout(7 downto 4) = "1001" and ZeroF = '1') else -- JPZ(Z=1)
-           '0';   
 
+cJCintE <= '1' when (qJCintB = "10" and irout(7 downto 3) = "11110") else -- STDA STDB
+           '0';
+    
+cJCintF <= '1' when (qJCintB = "10" and irout(7 downto 3) = "11111") else -- STDI
+           '1' when (qJCintB = "10" and irout(7 downto 4) = "0110") else -- JP
+           '1' when (qJCintB = "10" and irout(7 downto 4) = "0100" and ZeroF = '1') else -- JPZ(Z=1)
+           '1' when (qJCintB = "10" and irout(7 downto 4) = "0101" and CarryF= '1') else -- JPC(C=1)
+           '0';
 
 --------------------------------
 --  
@@ -343,47 +406,75 @@ clearIP   <= '1' when qJCintA='0' else
 loadIR    <= '1' when qJCintB = "11" else
 	         '0';
 
-modeALU   <= irout(1 downto 0) when (qJCintD = '1' and irout(7 downto 6) = "11") else -- ADDA ADDB INCA DECA 
-             "00";
+modeALU   <= irout(3 downto 0) when (qJCintD = '1' and irout(7 downto 6) = "10") else
+             "0000";
 
-loadFZ    <= '1' when ( qJCintD = '1' and irout(7 downto 6) = "11") else -- ADDA ADDB INCA DECA 
+loadFZ    <= '1' when ( qJCintD = '1' and irout(7 downto 6) = "10") else
+             '1' when ( qJCintD = '1' and irout(7 downto 4) = "0101") else
+             '0';
+             
+loadFC    <= '1' when ( qJCintD = '1' and irout(7 downto 6) = "10" and irout(2 downto 0) = "000") else -- ADD
+             '1' when ( qJCintD = '1' and irout(7 downto 6) = "10" and irout(2 downto 0) = "001") else -- SUB
+             '1' when ( qJCintD = '1' and irout(7 downto 6) = "10" and irout(2 downto 0) = "101") else -- INC
+             '1' when ( qJCintD = '1' and irout(7 downto 6) = "10" and irout(2 downto 0) = "110") else -- DEC
              '0';
 
-loadhMB   <= '1' when qJCintF = "011" else
+loadhMB   <= '1' when (qJCintF = "011" and irout(7 downto 4) = "1000") else -- JP
+             '1' when (qJCintF = "011" and irout(7 downto 4) = "0100" and ZeroF = '1') else -- JPZ(Z=1)
+             '1' when (qJCintF = "011" and irout(7 downto 4) = "0101" and CarryF= '1') else -- JPC(C=1)
              '0';      
         
-loadlMB   <= '1' when qJCintF = "110" else
-             '0';                                 
+loadlMB   <= '1' when (qJCintF = "110" and irout(7 downto 4) = "1000") else -- JP
+             '1' when (qJCintF = "110" and irout(7 downto 4) = "0100" and ZeroF = '1') else -- JPZ(Z=1)
+             '1' when (qJCintF = "110" and irout(7 downto 4) = "0101" and CarryF= '1') else -- JPC(C=1)
+             '0';                                
 
-loadIP    <= '1' when qJCintF = "100" else
-             '0';  
+loadIP    <= '1' when (qJCintF = "100" and irout(7 downto 4) = "1000") else -- JP
+             '1' when (qJCintF = "100" and irout(7 downto 4) = "0100" and ZeroF = '1') else -- JPZ(Z=1)
+             '1' when (qJCintF = "100" and irout(7 downto 4) = "0101" and CarryF= '1') else -- JPC(C=1)
+             '0'; 
 		   
-loadhIX <= '1' when (qJCintC = "11" and irout(7 downto 0) = "00100010") else -- SERIXH
+loadhIX <= '1' when (qJCintC = "11" and irout(7 downto 0) = "11010000") else -- SERIXH
            '0';
            
-loadlIX <= '1' when (qJCintC = "11" and irout(7 downto 0) = "00100001") else -- SETIXL
+loadlIX <= '1' when (qJCintC = "11" and irout(7 downto 0) = "11010001") else -- SETIXL
            '0';
  
-loadRegA <= irout(3) when qJCintC = "11" else -- LDIA (LDIB) LDDA (LDDB) (SETIXH) (SETIXL)
-            irout(3) when qJCintD = '1'  else -- ADDA (ADDB) INCA DECA
+loadRegA <= '1' when (qJCintC = "11" and irout(7 downto 0) = "11011000") else -- LDIA
+            '1' when (qJCintC = "11" and irout(7 downto 0) = "11100000") else -- LDDA
+            '1' when (qJCintD = '1'  and irout(7 downto 4) = "1000")     else -- ADDA SUBA ANDA ORA NOTA INCA DECA
             '0';
 
-loadRegB <= irout(2) when qJCintC = "11" else -- (LDIA) LDIB (LDDA) LDDB (SETIXH) (SETIXL)
-            irout(2) when qJCintD = '1'  else -- (ADDA) ADDB (INCA) (DECA)
+loadRegB <= '1' when (qJCintC = "11" and irout(7 downto 0) = "11011001") else -- LDIB
+            '1' when (qJCintC = "11" and irout(7 downto 0) = "11100001") else -- LDDB
+            '1' when (qJCintD = '1'  and irout(7 downto 4) = "1001")     else -- ADDB SUBB ANDB ORB NOTB INCB DECB
             '0';
+
+loadID  <=  '1' when (qJCintF = "011" and irout(7 downto 3) = "11111") else -- STDI
+	        '0';
 
 incIP   <=  '1' when qJCintB = "10"  else
-            '1' when (qJCintC = "11" and irout(7 downto 5) = "001") else -- SETIXH SETIXL LDIA LDIB
+            '1' when (qJCintC = "11" and irout(7 downto 5) = "110") else -- SETIXH SETIXL LDIA LDIB
             '1' when qJCintF = "011" else
             '0';
    
-inc2IP   <= '1' when (qJCintD = '1' and irout(7 downto 4) = "1001" and ZeroF = '0') else -- JPZ(Z=0)
+inc2IP   <= '1' when (qJCintD = '1' and irout(7 downto 5) = "010" and (ZeroF = '0' or CarryF = '0')) else -- JPZ(Z=0) JPC(C=0)
             '0';
 
-selMuxDIn<= '1' when qJCintC = "01" and irout(7 downto 4) = "0010" else -- LDIA LDIB (SETIXH) (SETIXL)
-            '1' when qJCintC = "01" and irout(7 downto 4) = "0001" else -- LDDA LDDB
-            '1' when qJCintC = "11" and irout(7 downto 4) = "0010" else -- LDIA LDIB (SETIXH) (SETIXL)
-            '1' when qJCintC = "11" and irout(7 downto 4) = "0001" else -- LDDA LDDB
+selMuxDIn<= '1' when qJCintC = "01" and irout(7 downto 3) = "11011" else -- LDIA LDIB
+            '1' when qJCintC = "01" and irout(7 downto 3) = "11100" else -- LDDA LDDB
+            '1' when qJCintC = "11" and irout(7 downto 3) = "11011" else -- LDIA LDIB
+            '1' when qJCintC = "11" and irout(7 downto 3) = "11100" else -- LDDA LDDB
+            '1' when (qJCintF = "001" and irout(7 downto 3) = "11111") else -- STDI
+            '1' when (qJCintF = "011" and irout(7 downto 3) = "11111") else -- STDI
             '0' ;
+
+selMuxDOut <= "01" when (qJCintE = "01" and irout(7 downto 2) = "111101") else -- STDB
+              "01" when (qJCintE = "11" and irout(7 downto 2) = "111101") else -- STDB
+              "01" when (qJCintE = "10" and irout(7 downto 2) = "111101") else -- STDB
+              "10" when (qJCintF = "111" and irout(7 downto 3) = "11111") else -- STDI
+              "10" when (qJCintF = "110" and irout(7 downto 3) = "11111") else -- STDI
+              "10" when (qJCintF = "100" and irout(7 downto 3) = "11111") else -- STDI
+              "00" ;
 
 end logic;

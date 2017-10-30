@@ -291,7 +291,7 @@ IR : Register08
 --------------------------------
 RegID : Register08
   port map(
-    d     => DataIn,
+    d     => DataInTmp,
     load  => loadID,
     clock => clock,
     reset => reset,

@@ -6,7 +6,7 @@
 -------------------------------------------
 -- [Caution!!]
 -- * Replace the following signal names with your signal names 
--- 1) loadRegC - "load" + the name of register which you added
+-- 1) loadID - "load" + the name of register which you added
 -- 2) selMuxDOut - "sel" + the name of MUX4x08 which you added
 -- 3) CarryF, loadFC - the output and the load signal of the carry flag which you added
 
@@ -36,7 +36,7 @@ architecture behavior of TestControl is
     signal ZeroF     : std_logic;
     signal CarryF    : std_logic;
 
-    signal loadRegC  : std_logic;
+    signal loadID    : std_logic;
     signal loadRegB  : std_logic;
     signal loadRegA  : std_logic;
 
@@ -74,7 +74,7 @@ component Controler is
     ZeroF     : in  std_logic;
     CarryF    : in  std_logic;
 
-    loadRegC  : out std_logic;
+    loadID    : out std_logic;
     loadRegB  : out std_logic;
     loadRegA  : out std_logic;
 
@@ -117,7 +117,7 @@ begin
     ZeroF     => ZeroF,
     CarryF    => CarryF,
 
-    loadRegC  => loadRegC,
+    loadID    => loadID,
     loadRegB  => loadRegB,
     loadRegA  => loadRegA,
 

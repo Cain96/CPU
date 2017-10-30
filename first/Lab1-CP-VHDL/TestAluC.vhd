@@ -64,11 +64,11 @@ begin
       wait for STEP;
       modeALU <= "0110";
       wait for STEP;
-      modeALU <= "0111";
-      wait for STEP;
       modeALU <= "1000";
       wait for STEP;
       modeALU <= "1001";
+      wait for STEP;
+      modeALU <= "1010";
       wait for STEP;
       In_A    <= "00000011";
       In_B    <= "00000011";
@@ -86,11 +86,11 @@ begin
       wait for STEP;
       modeALU <= "0110";
       wait for STEP;
-      modeALU <= "0111";
-      wait for STEP;
       modeALU <= "1000";
       wait for STEP;
       modeALU <= "1001";
+      wait for STEP;
+      modeALU <= "1010";
       wait for STEP;
     wait;
   end process;

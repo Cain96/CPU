@@ -7,7 +7,7 @@
 
 
 --------------------------------
--- D-FF                       --F
+--                            --
 --                            --
 --       (c) Keishi SAKANUSHI --
 --                 2005/08/23 --
@@ -568,9 +568,9 @@ end logic;
 -- '0100' : not               --
 -- '0101' : a + 1             --
 -- '0110' : a - 1             --
--- '0111' : not b             --
--- '1000' : b + 1             --
--- '1001' : b - 1             --
+-- '1000' : not b             --
+-- '1001' : b + 1             --
+-- '1010' : b - 1             --
 --                            --
 --------------------------------
 
@@ -610,9 +610,9 @@ signal cin_tmp      : std_logic;
 
 begin
 
-inA <= "00000001" when mode = "1000"    -- (b + 1)
+inA <= "00000001" when mode = "1001"    -- (b + 1)
 			else
-       "11111111" when mode = "1001"    -- (b - 1)
+       "11111111" when mode = "1010"    -- (b - 1)
 			else
        a;
 
@@ -649,7 +649,7 @@ result_logic <= a and b   when mode = "0010" -- ( and )
 			       else
 		(not a)   when mode = "0100" -- ( not a )
                                else
-		(not b)   when mode = "0111" -- ( not b )
+		(not b)   when mode = "1000" -- ( not b )
 			       else
                 "00000000";
 
@@ -658,8 +658,8 @@ result <= result_adder when mode = "0000" or -- (a + b)
                             mode = "0001" or -- (a - b)
                             mode = "0101" or -- (a + 1)
 			    mode = "0110" or -- (a - 1)
-			    mode = "1000" or -- (b + 1)
-			    mode = "1001"    -- (b - 1)
+			    mode = "1001" or -- (b + 1)
+			    mode = "1010"    -- (b - 1)
                        else
           result_logic;
                   

@@ -42,13 +42,17 @@ architecture logic of CProcessor is
     Address   : out std_logic_vector (15 downto 0);
     ZeroF     : out std_logic;
     CarryF    : out std_logic;
+    selMuxDOut: in  std_logic_vector (1 downto 0);
     DataOut   : out std_logic_vector (7 downto 0);
 
+    
     loadRegB  : in  std_logic;
     loadRegA  : in  std_logic;
+    loadID    : in  std_logic;
 
-    modeALU   : in  std_logic_vector (1 downto 0);
+    modeALU   : in  std_logic_vector (3 downto 0);
     loadFZ    : in  std_logic;
+    loadFC    : in  std_logic;
 
     clock     : in  std_logic;
     reset     : in  std_logic
@@ -75,12 +79,15 @@ architecture logic of CProcessor is
     selMuxAddr: out std_logic;
     ZeroF     : in  std_logic;
     CarryF    : in  std_logic;
+    selMuxDOut: out std_logic_vector (1 downto 0);
 
+    loadID    : out std_logic;
     loadRegB  : out std_logic;
     loadRegA  : out std_logic;
 
-    modeALU   : out std_logic_vector (1 downto 0);
+    modeALU   : out std_logic_vector (3 downto 0);
     loadFZ    : out std_logic;
+    loadFC    : out std_logic;
 
     read      : out std_logic;
     write     : out std_logic;
@@ -108,14 +115,17 @@ signal    clearIP   : std_logic;
 signal    selMuxAddr: std_logic;
 signal    ZeroF     : std_logic;
 signal    CarryF    : std_logic;
+signal    selMuxDOut: std_logic_vector (1 downto 0);
 
+signal    loadID    : std_logic;
 signal    loadRegB  : std_logic;
 signal    loadRegA  : std_logic;
 
-signal    modeALU   : std_logic_vector (1 downto 0);
+signal    modeALU   : std_logic_vector (3 downto 0);
 signal    loadFZ    : std_logic;
+signal    loadFC    : std_logic;
 
-begin    -- logic
+begin   -- logic
 
 
 path : DataPath
@@ -140,13 +150,16 @@ path : DataPath
     Address   => Address,
     ZeroF     => ZeroF,
 	CarryF    => CarryF,
+    selMuxDOut=> selMuxDOut,
 	DataOut   => DataOut,
 	
+    loadID    => loadID,
     loadRegA  => loadRegA,
     loadRegB  => loadRegB,
 
     modeALU   => modeALU,
 	loadFZ    => loadFZ,
+    loadFC    => loadFC,
 	
     clock     => clock,
 	reset     => reset
@@ -173,12 +186,15 @@ ctrl : Controler
     selMuxAddr=> selMuxAddr,
     ZeroF     => ZeroF,
 	CarryF    => CarryF,
+    selMuxDOut=>selMuxDOut,
 	
+    loadID    => loadID,
     loadRegA  => loadRegA,
     loadRegB  => loadRegB,
 
     modeALU   => modeALU,
 	loadFZ    => loadFZ,
+    loadFC    => loadFC,
 	
     clock     => clock,
 	reset     => reset,

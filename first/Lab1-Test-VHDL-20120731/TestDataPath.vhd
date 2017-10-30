@@ -40,7 +40,7 @@ architecture behavior of TestDataPath is
 	signal    CarryF    : std_logic;
 	signal    DataOut   : std_logic_vector (7 downto 0);
 
-	signal    loadID  : std_logic;
+	signal    loadID    : std_logic;
 	signal    loadRegB  : std_logic;
 	signal    loadRegA  : std_logic;
 
@@ -79,7 +79,7 @@ architecture behavior of TestDataPath is
 	    CarryF    : out std_logic;
 	    DataOut   : out std_logic_vector (7 downto 0);
 
-	    loadID  : in  std_logic;
+	    loadID    : in  std_logic;
 	    loadRegB  : in  std_logic;
 	    loadRegA  : in  std_logic;
 
@@ -176,7 +176,7 @@ wait for clk_cycle; -- RegA(33) <= RegA(11) or RegB(22)
 	selMuxDIn <= '0'; selMuxAddr <= '0'; selMuxDOut <= "10";
 	loadRegA <= '1'; loadRegB <= '0'; loadID <= '0';  
 	modeALU <= "0011";  
-wait for clk_cycle; -- RegB(11) <= RegA(11) and RegB(22)
+wait for clk_cycle; -- RegB(22) <= RegA(33) and RegB(22)
 	DataIn <= X"55";  
 	selMuxDIn <= '0'; selMuxAddr <= '0'; selMuxDOut <= "00";
 	loadRegA <= '0'; loadRegB <= '1'; loadID <= '0';  
