@@ -374,6 +374,7 @@ cJCintB <= '1' when qJCintA = '0'   else
            '1' when qJCintD = '1'   else
            '1' when qJCintE = "10"  else
            '1' when qJCintF = "100" else
+           '1' when irout(7 downto 4) = "0000" else -- NOP
            '0';
 
 cJCintC <= '1' when (qJCintB = "10" and irout(7 downto 5) = "110") else -- SETIXH SETIXL LDIA LDIB
@@ -382,8 +383,8 @@ cJCintC <= '1' when (qJCintB = "10" and irout(7 downto 5) = "110") else -- SETIX
 
 cJCintD <= '1' when (qJCintB = "10" and irout(7 downto 5) = "100") else -- ADD SUB AND OR NOT INC DEC
            '1' when (qJCintB = "10" and irout(7 downto 5) = "101") else -- CMP
-           '1' when (qJCintB = "10" and irout(7 downto 4) = "0100" and ZeroF = '0') else -- JPZ(Z=0)
-           '1' when (qJCintB = "10" and irout(7 downto 4) = "0101" and CarryF = '0') else -- JPC(C=0)
+           '1' when (qJCintB = "10" and irout(7 downto 4) = "0101" and ZeroF = '0') else -- JPZ(Z=0)
+           '1' when (qJCintB = "10" and irout(7 downto 4) = "0100" and CarryF = '0') else -- JPC(C=0)
            '0';
 
 cJCintE <= '1' when (qJCintB = "10" and irout(7 downto 3) = "11110") else -- STDA STDB
@@ -391,8 +392,8 @@ cJCintE <= '1' when (qJCintB = "10" and irout(7 downto 3) = "11110") else -- STD
     
 cJCintF <= '1' when (qJCintB = "10" and irout(7 downto 3) = "11111") else -- STDI
            '1' when (qJCintB = "10" and irout(7 downto 4) = "0110") else -- JP
-           '1' when (qJCintB = "10" and irout(7 downto 4) = "0100" and ZeroF = '1') else -- JPZ(Z=1)
-           '1' when (qJCintB = "10" and irout(7 downto 4) = "0101" and CarryF= '1') else -- JPC(C=1)
+           '1' when (qJCintB = "10" and irout(7 downto 4) = "0101" and ZeroF = '1') else -- JPZ(Z=1)
+           '1' when (qJCintB = "10" and irout(7 downto 4) = "0100" and CarryF= '1') else -- JPC(C=1)
            '0';
 
 --------------------------------
@@ -410,28 +411,27 @@ modeALU   <= irout(3 downto 0) when (qJCintD = '1' and irout(7 downto 6) = "10")
              "0000";
 
 loadFZ    <= '1' when ( qJCintD = '1' and irout(7 downto 6) = "10") else
-             '1' when ( qJCintD = '1' and irout(7 downto 4) = "0101") else
              '0';
              
-loadFC    <= '1' when ( qJCintD = '1' and irout(7 downto 6) = "10" and irout(2 downto 0) = "000") else -- ADD
-             '1' when ( qJCintD = '1' and irout(7 downto 6) = "10" and irout(2 downto 0) = "001") else -- SUB
-             '1' when ( qJCintD = '1' and irout(7 downto 6) = "10" and irout(2 downto 0) = "101") else -- INC
-             '1' when ( qJCintD = '1' and irout(7 downto 6) = "10" and irout(2 downto 0) = "110") else -- DEC
+loadFC    <= '1' when ( qJCintD = '1' and irout(7 downto 5) = "100" and irout(2 downto 0) = "000") else -- ADD
+             '1' when ( qJCintD = '1' and irout(7 downto 5) = "100" and irout(2 downto 0) = "001") else -- SUB
+             '1' when ( qJCintD = '1' and irout(7 downto 5) = "100" and irout(2 downto 0) = "101") else -- INC
+             '1' when ( qJCintD = '1' and irout(7 downto 5) = "100" and irout(2 downto 0) = "110") else -- DEC
              '0';
 
-loadhMB   <= '1' when (qJCintF = "011" and irout(7 downto 4) = "1000") else -- JP
-             '1' when (qJCintF = "011" and irout(7 downto 4) = "0100" and ZeroF = '1') else -- JPZ(Z=1)
-             '1' when (qJCintF = "011" and irout(7 downto 4) = "0101" and CarryF= '1') else -- JPC(C=1)
+loadhMB   <= '1' when (qJCintF = "011" and irout(7 downto 4) = "0110") else -- JP
+             '1' when (qJCintF = "011" and irout(7 downto 4) = "0101" and ZeroF = '1') else -- JPZ(Z=1)
+             '1' when (qJCintF = "011" and irout(7 downto 4) = "0100" and CarryF= '1') else -- JPC(C=1)
              '0';      
         
-loadlMB   <= '1' when (qJCintF = "110" and irout(7 downto 4) = "1000") else -- JP
-             '1' when (qJCintF = "110" and irout(7 downto 4) = "0100" and ZeroF = '1') else -- JPZ(Z=1)
-             '1' when (qJCintF = "110" and irout(7 downto 4) = "0101" and CarryF= '1') else -- JPC(C=1)
+loadlMB   <= '1' when (qJCintF = "110" and irout(7 downto 4) = "0110") else -- JP
+             '1' when (qJCintF = "110" and irout(7 downto 4) = "0101" and ZeroF = '1') else -- JPZ(Z=1)
+             '1' when (qJCintF = "110" and irout(7 downto 4) = "0100" and CarryF= '1') else -- JPC(C=1)
              '0';                                
 
-loadIP    <= '1' when (qJCintF = "100" and irout(7 downto 4) = "1000") else -- JP
-             '1' when (qJCintF = "100" and irout(7 downto 4) = "0100" and ZeroF = '1') else -- JPZ(Z=1)
-             '1' when (qJCintF = "100" and irout(7 downto 4) = "0101" and CarryF= '1') else -- JPC(C=1)
+loadIP    <= '1' when (qJCintF = "100" and irout(7 downto 4) = "0110") else -- JP
+             '1' when (qJCintF = "100" and irout(7 downto 4) = "0101" and ZeroF = '1') else -- JPZ(Z=1)
+             '1' when (qJCintF = "100" and irout(7 downto 4) = "0100" and CarryF= '1') else -- JPC(C=1)
              '0'; 
 		   
 loadhIX <= '1' when (qJCintC = "11" and irout(7 downto 0) = "11010000") else -- SERIXH

@@ -245,7 +245,7 @@ ALU : ALU08C
     cin     => zero,
     mode    => modeALU,
     fout    => foutALU,
-    cout    => CarryF,
+    cout    => coutALU,
     zout    => zoutALU
   );
 
