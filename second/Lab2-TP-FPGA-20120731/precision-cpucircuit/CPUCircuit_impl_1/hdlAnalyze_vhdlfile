@@ -1,0 +1,6 @@
+ALTERA_MF "c:\altera\11.0\quartus/eda/sim_lib/altera_mf_components.vhd" -2002
+work "D:/project/labc/2011/proj-fpga-tp/vhdl/../vhdl/CPUCircuit.vhd" -2002
+work "D:/project/labc/2011/proj-fpga-tp/vhdl/../vhdl/Control.vhd" -2002
+work "D:/project/labc/2011/proj-fpga-tp/vhdl/../vhdl/DataPath.vhd" -2002
+work "D:/project/labc/2011/proj-fpga-tp/vhdl/../vhdl/Resource.vhd" -2002
+work "D:/project/labc/2011/proj-fpga-tp/vhdl/../vhdl/TinyProcessor.vhd" -2002

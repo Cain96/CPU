@@ -1,0 +1,101 @@
+%
+% ROM.vhdの内容
+%
+
+% 動作
+%  KEY_D0を押すと表示をクリア
+%  KEY_D1を押すとSEG_A、SEG_BにDIP_Aの値を表示
+%  KEY_D2を押すとSEG_C、SEG_DにDIP_Aの値を表示
+%  KEY_D3を押すとSEG_A、SEG_B、SEG_C、SEG_DにDIP_Aの値を表示
+% 
+
+0000	22;  -- SETIXH
+0001	FF;
+0002	21;  -- SETIXL
+0003	FB;  -- (from KEY_D)
+0004	18;  -- LDDA
+0005	CB;  -- DECA
+0006	90;  -- JPZ (=1, KEY_D0 is pushed) goto 0020 (clear)
+0007	00;
+0008	20;
+0009	CB;  -- DECA
+000A	90;  -- JPZ (=2, KEY_D1 is pushed) goto 0030 (display on SEG_A + SEG_B)
+000B	00;
+000C	30;
+000D	CB;  -- DECA
+000E	CB;  -- DECA
+000F	90;  -- JPZ (=4, KEY_D2 is pushed) goto 0040 (display on SEG_C + SEG_D)
+0010	00;
+0011	40;
+0012	CB;  -- DECA
+0013	CB;  -- DECA
+0014	CB;  -- DECA
+0015	CB;  -- DECA
+0016	90;  -- JPZ (=8, KEY_D3 is pushed) goto 0050 (display on SEG_A - SEG_D)
+0017	00;
+0018	50;
+0019	80;  -- JP
+001A	00;
+001B	00;
+
+-- clear SEG_A + SEG_B and SEG_C + SEG_D
+0020	28;  -- LDIA
+0021	00;
+0022	21;  -- SETIXL
+0023	FF;
+0024	40;  -- STDA
+0025	21;  -- SETIXL
+0026	FE;
+0027	40;  -- STDA
+0028	80;  -- JP
+0029	00;
+002a	60;
+
+-- set DIP_A to SEG_A + SEG_B
+0030	21;  -- SETIXL
+0031	FC;
+0032	18;  -- LDDA
+0033	21;  -- SETIXL
+0034	FE;
+0035	40;  -- STDA
+0036	80;  -- JP
+0037	00;
+0038	60;
+
+-- set DIP_A to SEG_C + SEG_D
+0040	21;  -- SETIXL
+0041	FC;
+0042	18;  -- LDDA
+0043	21;  -- SETIXL
+0044	FF;
+0045	40;  -- STDA
+0046	80;  -- JP
+0047	00;
+0048	60;
+
+-- set DIP_A to SEG_A + SEG_B and SEG_C + SEG_D
+0050	21;  -- SETIXL
+0051	FC;
+0052	18;  -- LDDA
+0053	21;  -- SETIXL
+0054	FE;
+0055	40;  -- STDA
+0056	21;  -- SETIXL
+0057	FF;
+0058	40;  -- STDA
+0059	80;  -- JP
+005A	00;
+005B	60;
+
+      -- check KEY status
+0060	21;  -- SETIXL
+0061	FB;  -- (from KEY_D)
+0062	18;  -- LDDA
+0063	CA;  -- INCA
+0064	CB;  -- DECA
+0065	90;  -- JPZ
+0066	00;
+0067	00;
+0068	80;  -- JP
+0069	00;
+006A	62;

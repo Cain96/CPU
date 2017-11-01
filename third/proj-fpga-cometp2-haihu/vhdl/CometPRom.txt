@@ -1,0 +1,41 @@
+0000  00000000  --  NOP  バグにより1行目は解釈されないのでNOPを挟んでください
+0001  12E00000  --  LEA  gr=E xr=0 adr=0000  GR[E]に0000を格納 (データメモリへのオフセット)
+
+0002  12101122  --  LEA  gr=1 xr=0 adr=1122  GR[1]に1122を格納
+0003  111E0000  --  ST   gr=1 xr=E adr=0000  GR[E]+0000番地にGR[1]のデータを格納
+0004  12103344  --  LEA  gr=1 xr=0 adr=3344  GR[1]に3344を格納
+0005  111E0001  --  ST   gr=1 xr=E adr=0001  GR[E]+0001番地にGR[1]のデータを格納
+0006  12105566  --  LEA  gr=1 xr=0 adr=3344  GR[1]に5566を格納
+0007  111E0002  --  ST   gr=1 xr=E adr=0002  GR[E]+0002番地にGR[1]のデータを格納
+0008  12107788  --  LEA  gr=1 xr=0 adr=7788  GR[1]に7788を格納
+0009  111E0003  --  ST   gr=1 xr=E adr=0003  GR[E]+0003番地にGR[1]のデータを格納
+000A  121099AA  --  LEA  gr=1 xr=0 adr=99AA  GR[1]に99AAを格納
+000B  111E0004  --  ST   gr=1 xr=E adr=0004  GR[E]+0004番地にGR[1]のデータを格納
+000C  1210BBCC  --  LEA  gr=1 xr=0 adr=BBCC  GR[1]にBBCCを格納
+000D  111E0005  --  ST   gr=1 xr=E adr=0005  GR[E]+0005番地にGR[1]のデータを格納
+
+-- 3344 + 1122 = 4466
+000E  101E0001  --  LD   gr=1 xr=E adr=0001  GR[E]+0001番地のデータをGR[1]に読み出す
+000F  201E0000  --  ADD  gr=1 xr=E adr=0001  GR[1]とGR[E]+0000番地のデータのADDをGR[1]に入れる
+0010  1110FFFF  --  ST   gr=1 xr=0 adr=FFFF  LEDに出力 
+
+-- 5566 - 1122 = 4444
+0011 102E0002  --  LD   gr=2 xr=E adr=0002  GR[E]+0002番地のデータをGR[2]に読み出す
+0012  212E0000  --  SUB  gr=2 xr=E adr=0002  GR[2]とGR[E]+0000番地のデータのSUBをGR[2]に入れる
+0013  1120FFFF  --  ST   gr=2 xr=0 adr=FFFF  LEDに出力
+
+-- 7788 and 1122 = 1100
+0014  103E0003  --  LD   gr=3 xr=E adr=0003  GR[E]+0003番地のデータをGR[3]に読み出す
+0015  303E0000  --  AND  gr=3 xr=E adr=0003  GR[3]とGR[E]+0000番地のデータのANDをGR[3]に入れる
+0016  1130FFFF  --  ST   gr=3 xr=0 adr=FFFF  LEDに出力
+
+-- 99AA or 1122 = 99AA
+0017  104E0004  --  LD   gr=4 xr=E adr=0004  GR[E]+0004番地のデータをGR[4]に読み出す
+0018  314E0000  --  OR   gr=4 xr=E adr=0004  GR[4]とGR[E]+0000番地のデータのOR をGR[4]に入れる
+0019  1140FFFF  --  ST   gr=4 xr=0 adr=FFFF  LEDに出力
+
+-- BBCC xor 1122 = AAEE
+001A  105E0005  --  LD   gr=5 xr=E adr=0005  GR[E]+0005番地のデータをGR[5]に読み出す
+001B  325E0000  --  EOR  gr=5 xr=E adr=0005  GR[5]とGR[E]+0000番地のデータのEORをGR[5]に入れる
+001C  1150FFFF  --  ST   gr=5 xr=0 adr=FFFF  LEDに出力
+

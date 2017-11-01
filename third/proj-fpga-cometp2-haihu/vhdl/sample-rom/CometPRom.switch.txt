@@ -1,0 +1,36 @@
+サンプルロム
+
+D0を押すとDIP SWの値を出力
+D1を押すとBEEFを出力
+D2を押すとCAFEを出力
+
+使う場合は、CometPROM.switch.vhdをCometPROM.vhdと名前を変えて論理合成し、CometPROM.edfを作成する。
+
+
+0000  00000000  --  NOP  バグにより1行目は解釈されないのでNOPを挟んでください
+
+0001  1010FFFC  --  LD       gr=1 xr=0 adr=FFFC  FFFC番地のキースイッチデータをGR[1]に読みだす
+0002  23100001  --  SUBADDR  gr=1 xr=0 adr=0001  GR[1]の値から1を引く
+0003  63000010  --  JZE      gr=1 xr=0 adr=0010  ゼロなら0010番地へジャンプ (KEY_D0が押されたか)
+0004  23100001  --  SUBADDR  gr=1 xr=0 adr=0001  GR[1]の値から1を引く
+0005  63000020  --  JZE      gr=1 xr=0 adr=0020  ゼロなら0020番地へジャンプ (KEY_D1が押されたか)
+0006  23100002  --  SUBADDR  gr=1 xr=0 adr=0002  GR[1]の値から2を引く
+0007  63000030  --  JZE      gr=1 xr=0 adr=0020  ゼロなら0030番地へジャンプ (KEY_D2が押されたか)
+0008  64000001  --  JMP      gr=1 xr=0 adr=0000  0001番地へジャンプ
+
+0010  1010FFFD  --  LD       gr=1 xr=0 adr=FFFD  FFFD番地のディップスイッチデータをGR[1]に読みだす
+0011  1110FFFF  --  ST       gr=1 xr=0 adr=FFFF  LEDに出力
+0012  64000040  --  JMP      gr=1 xr=0 adr=0040  0040番地へジャンプ
+
+0020  1210BEEF  --  LEA      gr=1 xr=0 adr=BEEF  GR[1]にBEEFを入れる
+0021  1110FFFF  --  ST       gr=1 xr=0 adr=FFFF  LEDに出力
+0022  64000040  --  JMP      gr=1 xr=0 adr=0040  0040番地へジャンプ
+
+0030  1210CAFE  --  LEA      gr=1 xr=0 adr=CAFE  GR[1]にCAFEを入れる
+0031  1110FFFF  --  ST       gr=1 xr=0 adr=FFFF  LEDに出力
+0032  64000040  --  JMP      gr=1 xr=0 adr=0040  0040番地へジャンプ
+
+0040  1010FFFC  --  LD       gr=1 xr=0 adr=FFFC  FFFC番地のキースイッチデータをGR[1]に読みだす
+0041  22100000  --  ADDADDR  gr=1 xr=0 adr=0000  GR[1]の値に0を足す
+0042  63000001  --  JZE      gr=1 xr=0 adr=0020  ゼロなら0001番地へジャンプ
+0043  64000040  --  JMP      gr=1 xr=0 adr=0040  0040番地へジャンプ

@@ -1,0 +1,184 @@
+set_global_assignment -name RESERVE_PIN "AS INPUT TRI-STATED"
+
+# -------------------------------------------------------------------------- #
+# reset/clock
+# -------------------------------------------------------------------------- #
+set_location_assignment PIN_28 -to clock
+set_location_assignment PIN_240 -to reset
+
+# -------------------------------------------------------------------------- #
+# Key SW
+# -------------------------------------------------------------------------- #
+set_location_assignment PIN_2 -to key_a[0]
+set_location_assignment PIN_3 -to key_a[1]
+set_location_assignment PIN_4 -to key_a[2]
+set_location_assignment PIN_5 -to key_a[3]
+set_location_assignment PIN_6 -to key_a[4]
+set_location_assignment PIN_7 -to key_b[0]
+set_location_assignment PIN_8 -to key_b[1]
+set_location_assignment PIN_11 -to key_b[2]
+set_location_assignment PIN_12 -to key_b[3]
+set_location_assignment PIN_13 -to key_b[4]
+set_location_assignment PIN_14 -to key_c[0]
+set_location_assignment PIN_15 -to key_c[1]
+set_location_assignment PIN_16 -to key_c[2]
+set_location_assignment PIN_17 -to key_c[3]
+set_location_assignment PIN_18 -to key_c[4]
+set_location_assignment PIN_19 -to key_d[0]
+set_location_assignment PIN_20 -to key_d[1]
+set_location_assignment PIN_21 -to key_d[2]
+set_location_assignment PIN_23 -to key_d[3]
+set_location_assignment PIN_41 -to key_d[4]
+
+# -------------------------------------------------------------------------- #
+# Hex SW
+# -------------------------------------------------------------------------- #
+set_location_assignment PIN_214 -to hex_a[0]
+set_location_assignment PIN_215 -to hex_a[1]
+set_location_assignment PIN_216 -to hex_a[2]
+set_location_assignment PIN_217 -to hex_a[3]
+set_location_assignment PIN_220 -to hex_b[0]
+set_location_assignment PIN_204 -to hex_b[1]
+set_location_assignment PIN_198 -to hex_b[2]
+set_location_assignment PIN_103 -to hex_b[3]
+
+# -------------------------------------------------------------------------- #
+# DIP SW
+# -------------------------------------------------------------------------- #
+set_location_assignment PIN_218 -to dip_a[0]
+set_location_assignment PIN_219 -to dip_a[1]
+set_location_assignment PIN_222 -to dip_a[2]
+set_location_assignment PIN_223 -to dip_a[3]
+set_location_assignment PIN_224 -to dip_a[4]
+set_location_assignment PIN_225 -to dip_a[5]
+set_location_assignment PIN_226 -to dip_a[6]
+set_location_assignment PIN_227 -to dip_a[7]
+set_location_assignment PIN_239 -to dip_b[0]
+set_location_assignment PIN_238 -to dip_b[1]
+set_location_assignment PIN_237 -to dip_b[2]
+set_location_assignment PIN_236 -to dip_b[3]
+set_location_assignment PIN_235 -to dip_b[4]
+set_location_assignment PIN_234 -to dip_b[5]
+set_location_assignment PIN_233 -to dip_b[6]
+set_location_assignment PIN_228 -to dip_b[7]
+
+# -------------------------------------------------------------------------- #
+# BZ
+# -------------------------------------------------------------------------- #
+set_location_assignment PIN_42 -to bz
+
+# -------------------------------------------------------------------------- #
+# LED
+# -------------------------------------------------------------------------- #
+set_location_assignment PIN_47 -to led[0]
+set_location_assignment PIN_48 -to led[1]
+set_location_assignment PIN_49 -to led[2]
+set_location_assignment PIN_50 -to led[3]
+set_location_assignment PIN_53 -to led[4]
+set_location_assignment PIN_54 -to led[5]
+set_location_assignment PIN_55 -to led[6]
+set_location_assignment PIN_56 -to led[7]
+
+# -------------------------------------------------------------------------- #
+# 7 Segment LED
+# -------------------------------------------------------------------------- #
+set_location_assignment PIN_133 -to seg_a[0]
+set_location_assignment PIN_134 -to seg_a[1]
+set_location_assignment PIN_135 -to seg_a[2]
+set_location_assignment PIN_136 -to seg_a[3]
+set_location_assignment PIN_137 -to seg_a[4]
+set_location_assignment PIN_138 -to seg_a[5]
+set_location_assignment PIN_139 -to seg_a[6]
+set_location_assignment PIN_140 -to seg_a[7]
+set_location_assignment PIN_123 -to seg_b[0]
+set_location_assignment PIN_124 -to seg_b[1]
+set_location_assignment PIN_125 -to seg_b[2]
+set_location_assignment PIN_126 -to seg_b[3]
+set_location_assignment PIN_127 -to seg_b[4]
+set_location_assignment PIN_128 -to seg_b[5]
+set_location_assignment PIN_131 -to seg_b[6]
+set_location_assignment PIN_132 -to seg_b[7]
+set_location_assignment PIN_115 -to seg_c[0]
+set_location_assignment PIN_116 -to seg_c[1]
+set_location_assignment PIN_117 -to seg_c[2]
+set_location_assignment PIN_118 -to seg_c[3]
+set_location_assignment PIN_119 -to seg_c[4]
+set_location_assignment PIN_120 -to seg_c[5]
+set_location_assignment PIN_121 -to seg_c[6]
+set_location_assignment PIN_122 -to seg_c[7]
+set_location_assignment PIN_101 -to seg_d[0]
+set_location_assignment PIN_104 -to seg_d[1]
+set_location_assignment PIN_105 -to seg_d[2]
+set_location_assignment PIN_106 -to seg_d[3]
+set_location_assignment PIN_107 -to seg_d[4]
+set_location_assignment PIN_108 -to seg_d[5]
+set_location_assignment PIN_113 -to seg_d[6]
+set_location_assignment PIN_114 -to seg_d[7]
+set_location_assignment PIN_87 -to seg_e[0]
+set_location_assignment PIN_88 -to seg_e[1]
+set_location_assignment PIN_93 -to seg_e[2]
+set_location_assignment PIN_94 -to seg_e[3]
+set_location_assignment PIN_95 -to seg_e[4]
+set_location_assignment PIN_98 -to seg_e[5]
+set_location_assignment PIN_99 -to seg_e[6]
+set_location_assignment PIN_100 -to seg_e[7]
+set_location_assignment PIN_77 -to seg_f[0]
+set_location_assignment PIN_78 -to seg_f[1]
+set_location_assignment PIN_79 -to seg_f[2]
+set_location_assignment PIN_82 -to seg_f[3]
+set_location_assignment PIN_83 -to seg_f[4]
+set_location_assignment PIN_84 -to seg_f[5]
+set_location_assignment PIN_85 -to seg_f[6]
+set_location_assignment PIN_86 -to seg_f[7]
+set_location_assignment PIN_65 -to seg_g[0]
+set_location_assignment PIN_66 -to seg_g[1]
+set_location_assignment PIN_67 -to seg_g[2]
+set_location_assignment PIN_68 -to seg_g[3]
+set_location_assignment PIN_73 -to seg_g[4]
+set_location_assignment PIN_74 -to seg_g[5]
+set_location_assignment PIN_75 -to seg_g[6]
+set_location_assignment PIN_76 -to seg_g[7]
+set_location_assignment PIN_57 -to seg_h[0]
+set_location_assignment PIN_58 -to seg_h[1]
+set_location_assignment PIN_59 -to seg_h[2]
+set_location_assignment PIN_60 -to seg_h[3]
+set_location_assignment PIN_61 -to seg_h[4]
+set_location_assignment PIN_62 -to seg_h[5]
+set_location_assignment PIN_63 -to seg_h[6]
+set_location_assignment PIN_64 -to seg_h[7]
+
+# -------------------------------------------------------------------------- #
+# Memory
+# -------------------------------------------------------------------------- #
+set_location_assignment PIN_187 -to mem_cs
+set_location_assignment PIN_188 -to mem_we
+set_location_assignment PIN_193 -to mem_oe
+set_location_assignment PIN_141 -to mem_a[0]
+set_location_assignment PIN_156 -to mem_a[1]
+set_location_assignment PIN_158 -to mem_a[2]
+set_location_assignment PIN_159 -to mem_a[3]
+set_location_assignment PIN_160 -to mem_a[4]
+set_location_assignment PIN_161 -to mem_a[5]
+set_location_assignment PIN_162 -to mem_a[6]
+set_location_assignment PIN_163 -to mem_a[7]
+set_location_assignment PIN_164 -to mem_a[8]
+set_location_assignment PIN_165 -to mem_a[9]
+set_location_assignment PIN_166 -to mem_a[10]
+set_location_assignment PIN_167 -to mem_a[11]
+set_location_assignment PIN_168 -to mem_a[12]
+set_location_assignment PIN_169 -to mem_a[13]
+set_location_assignment PIN_170 -to mem_a[14]
+set_location_assignment PIN_173 -to mem_a[15]
+set_location_assignment PIN_174 -to mem_a[16]
+set_location_assignment PIN_175 -to mem_a[17]
+set_location_assignment PIN_176 -to mem_a[18]
+set_location_assignment PIN_177 -to mem_data[0]
+set_location_assignment PIN_178 -to mem_data[1]
+set_location_assignment PIN_179 -to mem_data[2]
+set_location_assignment PIN_180 -to mem_data[3]
+set_location_assignment PIN_181 -to mem_data[4]
+set_location_assignment PIN_182 -to mem_data[5]
+set_location_assignment PIN_183 -to mem_data[6]
+set_location_assignment PIN_184 -to mem_data[7]
+
+
